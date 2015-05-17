@@ -1,0 +1,51 @@
+@charset "utf-8";
+/* CSS Document */
+
+.yaweather {
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 10px;
+	padding-top: 5px;
+	padding-right: 5px;
+	padding-left: 5px;
+	display: inline-block;
+	height: 105px;
+	width: 230px;
+}
+.yw_font {
+	font: 15px Arial, Helvetica, sans-serif;
+}
+.for_td {
+	padding: 2;
+}
+.info {
+	/*vertical-align: top;*/
+	float: left;
+	height: 84px;
+	width: 86px;
+}
+.icon {
+	position: relative;
+}
+.temp {
+	position: relative;
+	left: 19px;
+	top: -20px;
+	font-size: 39px;
+}
+.tabl {
+	float: right;
+}
+.weather_type {
+	position: relative;
+	top: -10px;
+	clear: left;
+}
+.wrapper {
+	float: left;
+	width: 105px;
+}
+.day {
+	text-align: center;
+	font-weight: bold;
+}

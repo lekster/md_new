@@ -1,0 +1,71 @@
+<!--#
+ @version 0.2 (auto-set)
+#-->
+<!-- table methods search -->
+
+&nbsp;
+<div><a href="?view_mode=edit_methods" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> <#LANG_ADD_METHOD#></a></div>
+&nbsp;
+
+<table width=100% border=0><tr>
+<td valign=top>
+<!-- results -->
+[#if RESULT#]
+<!-- search results (list) -->
+<form action="?" method="post" name="frmList_methods">
+<table class="table table-bordered">
+<tr>
+ <td>
+ <b><#LANG_TITLE#></b>
+ </td>
+ <td>
+ <b><#LANG_DESCRIPTION#></b>
+ </td>
+<td>&nbsp;</td>
+</tr>
+[#begin RESULT#]
+<tr >
+
+ <td>
+
+   <a href="?view_mode=edit_methods&id=[#ID#]" title="<#LANG_EDIT#>">[#TITLE#]</a>
+ </td>
+ <td
+   >
+  [#if DESCRIPTION!=""#]
+   [#DESCRIPTION#]
+  [#else#]
+   &nbsp;
+  [#endif#]
+ </td>
+ <td >
+    <a href="?view_mode=edit_methods&id=[#ID#]" title="<#LANG_EDIT#>" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-pencil"></i></a>
+    <a href="?view_mode=delete_methods&id=[#ID#]" onClick="return confirm('Delete record?')" title="<#LANG_DELETE#>" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-remove"></i></a>
+ </td>
+</tr>
+[#end RESULT#]
+</table>
+<input type="hidden" name="data_source" value="<#DATA_SOURCE#>">
+<input type="hidden" name="view_mode" value="multiple_methods">
+</form>
+<!-- / search results (list) -->
+[#else RESULT#]
+<p align=center>
+<font color="red"><#LANG_NO_RECORDS_FOUND#></font>
+</p>
+[#endif RESULT#]
+<!-- / results -->
+</td></tr></table>
+[#if PARENT_METHODS#]
+<big><#LANG_PARENT_METHODS#>:</big>
+<table class="table table-bordered">
+ [#begin PARENT_METHODS#]
+ <tr>
+  <td valign="top"><b><a href="?(panel:{action=classes})&md=classes&view_mode=edit_classes&id=[#CLASS_ID#]&tab=methods">[#CLASS_TITLE#]</a>.
+        <a href="?(panel:{action=classes}classes:{view_mode=edit_classes,id=[#CLASS_ID#]})&md=methods&view_mode=edit_methods&id=[#ID#]&tab=methods">[#TITLE#]</a></b></td>
+  <td valign="top">[#DESCRIPTION#]</td>
+  <td valign="top">[ <a href="?view_mode=edit_methods&overwrite=[#ID#]"><#LANG_OVERWRITE#></a> ]</td>
+ </tr>
+ [#end PARENT_METHODS#]
+</table>
+[#endif#]

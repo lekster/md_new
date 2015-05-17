@@ -1,0 +1,314 @@
+<style>
+[#inc elements.css#]
+</style>
+
+[#if "<#SETTINGS_SCENES_CLICKSOUND#>"!=""#]
+<div style="display:none">
+<audio id="click_sound" src="<#SETTINGS_SCENES_CLICKSOUND#>" controls preload="auto" autobuffer>
+</audio>
+</div>
+[#endif#]
+
+        [#if TOTAL!="1"#]
+        <style>[#inc slider.css#]</style>
+        <script type="text/javascript" src="<#ROOTHTML#>js/easySlider1.7.js"></script>
+        [#endif TOTAL#]
+
+        <script type="text/javascript" language="javascript">
+
+        var codeHash=new Object();
+        var firstRun=1;
+        var checkTimer;
+
+        function EvalSound(soundobj) {
+         //alert('zz');
+         var thissound=document.getElementById(soundobj);
+         thissound.play();
+        }
+
+        function switchScene(scene_id) {
+         [#begin RESULT#]
+         if (scene_id=='[#ID#]') {
+           $('#controls[#NUMP#] a').click();
+         }
+         [#end RESULT#]
+         return false;
+        }
+
+        function controlWindowPositionChanged(id) {
+         //alert(id);
+         return false;
+        }
+
+        [#begin RESULT#][#begin ALL_ELEMENTS#]
+        [#begin STATES#]
+        [#if MENU_ITEM_ID!="0" || HOMEPAGE_ID!="0" || EXT_URL!=""#]
+         var window[#ID#]_width=[#WINDOW_WIDTH#];
+         var window[#ID#]_height=[#WINDOW_HEIGHT#];
+         var window[#ID#]_posx=[#WINDOW_POSX#];
+         var window[#ID#]_posy=[#WINDOW_POSY#];
+        [#endif MENU_ITEM_ID#][#end STATES#]
+        [#end ALL_ELEMENTS#][#end RESULT#]
+
+        function stateClicked(id) {
+
+         var window_url;
+         
+         [#if "<#SETTINGS_SCENES_CLICKSOUND#>"!=""#]
+         EvalSound('click_sound');
+         [#endif#]
+
+
+         [#begin RESULT#][#begin ALL_ELEMENTS#][#begin STATES#]
+
+         [#if "<#ALL_ELEMENTS.TYPE#>"=="button"#]
+         if (id==[#ID#]) {
+          $('#state_[#ID#]').addClass('clicked');
+          setTimeout("$('#state_[#ID#]').removeClass('clicked');", 150);
+         }
+         [#endif TYPE#]
+
+         [#if MENU_ITEM_ID!="0" || HOMEPAGE_ID!="0" || EXT_URL!=""#]
+          [#if MENU_ITEM_ID!="0"#]
+          window_url='/menu.html?parent=[#MENU_ITEM_ID#]';
+          [#endif#]
+          [#if HOMEPAGE_ID!="0"#]
+          window_url='<#ROOTHTML#>page/[#HOMEPAGE_ID#].html';
+          [#endif#]
+          [#if EXT_URL!=""#]
+          window_url='[#EXT_URL#]';
+          [#endif#]
+         [#endif#]
+
+         [#if "<#ALL_ELEMENTS.TYPE#>"=="navgo"#]
+         if (id==[#ID#]) {
+          window.location.href=window_url;
+          return;
+         }
+         [#endif TYPE#]
+
+
+
+         [#if MENU_ITEM_ID!="0" || HOMEPAGE_ID!="0" || EXT_URL!=""#]
+         if (id==[#ID#]) {
+
+          var top=$('#scene_background_<#RESULT.ID#>').offset().top;
+          var left=$('#scene_background_<#RESULT.ID#>').offset().left;
+
+
+          var wdth=window[#ID#]_width;
+          var hdth=window[#ID#]_height;
+          var x=window[#ID#]_posx+left;
+          var y=window[#ID#]_posy+top;
+
+          if (!wdth) wdth=500;
+          if (!hdth) hdth=500;
+          if (!x) x=200;
+          if (!y) y=200;
+
+
+
+          var jWindowObj[#ID#] = $.jWindow({ 
+           id: 'state[#ID#]', 
+           title: '<#ELEMENTS.TITLE#>', 
+           posx: x, 
+           posy: y, 
+           width: wdth, 
+           height: hdth, 
+           type: 'iframe', 
+           marginTop:0, 
+           marginBottom:0, 
+           marginLeft:0, 
+           marginRight:0, 
+           url: window_url,
+           onResizeEnd:function () {
+            //Size changed
+            var top=$('#scene_background_<#RESULT.ID#>').offset().top;
+            var left=$('#scene_background_<#RESULT.ID#>').offset().left;
+            var url1="?ajax=1&op=position";
+            window[#ID#]_posx=(jWindowObj[#ID#].get('posx'))-left;
+            window[#ID#]_posy=(jWindowObj[#ID#].get('posy'))-top;
+            window[#ID#]_width=(jWindowObj[#ID#].get('width'));
+            window[#ID#]_height=(jWindowObj[#ID#].get('height'));
+            url1+='&id=[#ID#]&posx='+window[#ID#]_posx+'&posy='+window[#ID#]_posy+'&width='+window[#ID#]_width+'&height='+window[#ID#]_height;
+            $.ajax({url: url1});
+           }, 
+           onDragEnd:function () {
+            //Position changed
+            var url1="?ajax=1&op=position";
+            var top=$('#scene_background_<#RESULT.ID#>').offset().top;
+            var left=$('#scene_background_<#RESULT.ID#>').offset().left;
+            window[#ID#]_posx=(jWindowObj[#ID#].get('posx'))-left;
+            window[#ID#]_posy=(jWindowObj[#ID#].get('posy'))-top;
+            window[#ID#]_width=(jWindowObj[#ID#].get('width'));
+            window[#ID#]_height=(jWindowObj[#ID#].get('height'));
+            url1+='&id=[#ID#]&posx='+window[#ID#]_posx+'&posy='+window[#ID#]_posy+'&width='+window[#ID#]_width+'&height='+window[#ID#]_height;
+            $.ajax({url: url1});
+           },
+           modal: false });
+          jWindowObj[#ID#].show();
+          jWindowObj[#ID#].update();
+          [#if (SCRIPT_ID="0") && (ACTION_METHOD="") && (CODE="")#]return;[#endif#]
+         }
+         [#endif MENU_ITEM_ID#][#end STATES#][#end ALL_ELEMENTS#][#end RESULT#]
+
+         var url="?ajax=1&op=click";
+         url+='&id='+id;
+         $.ajax({
+          url: url,
+          }).done(function(data) { 
+           processCheckStates(data);
+          });
+         return false;
+        }
+
+
+        function processCheckStates(data) {
+           var obj=jQuery.parseJSON(data);
+           if (obj.length) {
+            for(var i=0;i<obj.length;i++) {
+             var elem=$('#state_'+obj[i].ID);
+
+             if ((typeof obj[i].HTML!= 'undefined') && (!codeHash.hasOwnProperty('code'+obj[i].ID) || codeHash['code'+obj[i].ID]!=obj[i].HTML)) {
+              elem.html('<span>'+obj[i].HTML+'</span>');
+              codeHash['code'+obj[i].ID]=obj[i].HTML;
+             }
+
+             if (obj[i].STATE=='1' && !elem.is(':visible')) {
+              if (elem.hasClass('inlineblock')) {
+               elem.css('display', 'inline-block');
+              } else {
+               elem.show();
+              }
+              
+              //$('#' + id).css('display', 'inline-block');
+              if (firstRun!=1 && obj[i].SWITCH_SCENE=='1') {
+               switchScene(obj[i].SCENE_ID);
+              }
+             }
+             if (obj[i].STATE!='1' && elem.is(':visible')) {
+              elem.hide();
+             }
+            }
+           }
+        }
+
+
+        function checkAllStates() {
+         clearTimeout(checkTimer);
+         var url="?ajax=1&op=checkAllStates[#if "<#SCENE_ID#>"!=""#]&scene_id=<#SCENE_ID#>[#endif#]";
+         $.ajax({
+          url: url,
+          }).done(function(data) { 
+           processCheckStates(data);
+           [#if TOTAL!="1"#]
+           if (firstRun==1) {
+                        $("#slider").easySlider({
+                                auto: false, 
+                                numeric: true,
+                                [#if "<#SETTINGS_SCENES_VERTICAL_NAV#>"=="1"#]numericId: 'controls_vertical',[#endif#]
+                                continuous: false
+                        });
+           }
+           [#endif TOTAL#]
+           firstRun=0;
+           checkTimer=setTimeout('checkAllStates();', 3000);
+          });
+         return false;
+        }
+
+                $(document).ready(function(){
+                [#if TOTAL="1"#]
+                 [#if SCENE_WALLPAPER!=""#]
+                 if (inIframe) {
+                  if (typeof window.parent.setBackgroundStyle!=='undefined') {
+                    if ($('#scene_wallpaper_[#SCENE_ID#]').css('background-image')!='') {
+                     $('body').css('background-color', 'transparent');
+                     window.parent.$('body').css('background-image', $('#scene_wallpaper_[#SCENE_ID#]').css('background-image'));
+                     window.parent.$('body').css('background-attachment', $('#scene_wallpaper_[#SCENE_ID#]').css('background-attachment'));
+                     window.parent.$('body').css('background-repeat', $('#scene_wallpaper_[#SCENE_ID#]').css('background-repeat'));
+                     $('#scene_wallpaper_[#SCENE_ID#]').css('background-image', '');
+                    }
+                  }
+                 }
+                 [#endif SCENE_WALLPAPER#]
+                [#endif TOTAL#]
+                        checkAllStates();
+                });     
+
+
+        </script>
+
+
+<table  border="0" align="center"[#if "<#TOTAL#>"=="1"#] width="100%"[#endif#] cellpadding="0" cellspacing="0">
+ <tr>
+  <td valign="top">
+<div style="[#if "<#TOTAL#>"!="1"#]width:<#SETTINGS_SCENES_WIDTH#>px;[#endif#];position:relative;">
+<div id="slider">
+[#if "<#TOTAL#>"!="1"#]<ul>[#endif#]
+[#begin RESULT#]
+[#if "<#TOTAL#>"!="1"#]<li id='scene_[#ID#]' style="width:<#SETTINGS_SCENES_WIDTH#>px;">[#endif#]
+ <div id="scene_wallpaper_[#ID#]" style="[#if WALLPAPER!=""#]background-image:url([#WALLPAPER#]);[#if WALLPAPER_FIXED="1"#]background-attachment: fixed;[#endif#][#if WALLPAPER_NOREPEAT="1"#]background-repeat: no-repeat;[#endif#][#endif#]">
+ <!--#
+ <table border="0" cellspacing="0" cellpadding="0" align="center"><td valign="top">
+ #-->
+ <div id="scene_background_[#ID#]" style="position:relative;">
+ [#begin ELEMENTS#]
+ <!-- element [#ID#] -->
+ [#if ELEMENTS#]
+ <div 
+   class="element_<#ELEMENTS.ID#> type_<#ELEMENTS.TYPE#>[#if "<#ELEMENTS.CSS_STYLE#>"!=""#] style_<#ELEMENTS.CSS_STYLE#>[#endif#][#if ("<#ELEMENTS.BACKGROUND#>"=="1")#] container_background[#endif#]"
+   style="position:absolute;left:<#ELEMENTS.LEFT#>px;top:<#ELEMENTS.TOP#>px;
+   [#if "<#ELEMENTS.ZINDEX#>"!=""#]z-index:<#ELEMENTS.ZINDEX#>;[#endif#]
+   [#if ("<#ELEMENTS.WIDTH#>"!="0") && ("<#ELEMENTS.HEIGHT#>"!="0")#]width:<#ELEMENTS.WIDTH#>px;height:<#ELEMENTS.HEIGHT#>px;[#endif#]
+   ">
+  [#tree ELEMENTS#]
+ </div>
+ [#else ELEMENTS#]
+
+ [#begin STATES#]
+  <div 
+   class="element_<#ELEMENTS.ID#> type_<#ELEMENTS.TYPE#>[#if "<#ELEMENTS.CSS_STYLE#>"!=""#] style_<#ELEMENTS.CSS_STYLE#>[#endif#] state_[#TITLE#][#if ("<#ELEMENTS.BACKGROUND#>"=="1")#] html_background[#endif#][#if "<#ELEMENTS.POSITION_TYPE#>"=="1"#] inlineblock[#endif#]" 
+   id="state_[#ID#]"
+   [#if SCRIPT_ID!="0" || HOMEPAGE_ID!="0" || EXT_URL!="" || MENU_ITEM_ID!="0" || ACTION_METHOD!="" || CODE!=""#] 
+    onClick="stateClicked([#ID#]);"
+   [#endif#] 
+   style="
+   [#if "<#ELEMENTS.POSITION_TYPE#>"=="0"#]position:absolute;left:<#ELEMENTS.LEFT#>px;top:<#ELEMENTS.TOP#>px;[#endif ELEMENTS#]
+   [#if "<#ELEMENTS.ZINDEX#>"!=""#]z-index:<#ELEMENTS.ZINDEX#>;[#endif#]
+   [#if ("<#ELEMENTS.WIDTH#>"!="0") && ("<#ELEMENTS.HEIGHT#>"!="0")#]width:<#ELEMENTS.WIDTH#>px;height:<#ELEMENTS.HEIGHT#>px;[#endif#]
+   [#if SCRIPT_ID!="0" || MENU_ITEM_ID!="0" || ACTION_METHOD!="" || EXT_URL!="" || CODE!=""#]cursor:pointer;[#endif#]display:none;">[#if "<#ELEMENTS.TYPE#>"=="img"#]<img src="[#IMAGE#]" border="0">[#endif#]<span>[#HTML#]</span></div>
+ [#end STATES#]
+
+ [#endif ELEMENTS#]
+
+ [#if CSS!=""#]
+ <style>
+  [#CSS#]
+ </style>
+ [#endif CSS#]
+ [#if JAVASCRIPT!=""#]
+ <script language="javascript">
+  [#JAVASCRIPT#]
+ </script>
+ [#endif JAVASCRIPT#]
+ <!-- /element [#ID#] -->
+ [#end ELEMENTS#]
+ [#if BACKGROUND!=""#]
+ <div class="scene_background"><img src="[#BACKGROUND#]" border="0"></div>
+ [#endif BACKGROUND#]
+ </div>
+ <!--#
+ </td>
+ </table>
+ #-->
+ </div>
+ [#if "<#TOTAL#>"!="1"#]</li>[#endif#]
+[#end RESULT#]
+[#if "<#TOTAL#>"!="1"#]</ul>[#endif#]
+</div>
+</div> <!-- /slider -->
+</td>
+ </tr>
+</table>
+

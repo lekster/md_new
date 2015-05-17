@@ -1,0 +1,80 @@
+<!--#
+ @version 0.3 (auto-set)
+#-->
+
+<script language="javascript">
+ function showHide(id) {
+  //var elem=document.getElementById('sub[#ID#]');elem.style.display='block';return false;
+  if ($('#sub'+id).is(":visible")) {
+   $('#sub'+id).hide();
+   $('#link'+id).html('[ + ]');
+   $.cookie("script_categories_item"+id, null);
+  } else {
+   $.cookie("script_categories_item"+id, "1");
+   $('#sub'+id).show();
+   $('#link'+id).html('[ - ]');
+  }
+  return false;
+ }
+</script>
+
+&nbsp;
+<!-- table scripts search -->
+<p>
+<a href="?view_mode=edit_scripts" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> <#LANG_ADD_NEW_SCRIPT#></a>
+</p>
+
+<!-- results -->
+[#if RESULT#]
+<!-- search results (list) -->
+[#begin RESULT#]
+[#if NEW_CATEGORY#]
+[#if FIRST!="1"#]
+</table>
+</div>
+&nbsp;<br>
+[#endif FIRST#]
+<big><b>[#CATEGORY#]</b></big>
+<a href="#" id="link[#CATEGORY_ID#]" style="text-decoration:none" onClick="return showHide([#CATEGORY_ID#]);">[ + ]</a>
+<div id='sub[#CATEGORY_ID#]' style="display:none">
+<table class="table table-striped">
+[#endif#]
+<tr class="hover_btn2">
+ <td nowrap>
+  <b>
+  [#if TITLE!=""#]
+   <a href="?view_mode=edit_scripts&id=[#ID#]">[#TITLE#]</a>
+  [#else#]
+   &nbsp;
+  [#endif#]
+  </a></b>
+ </td>
+ <td width="90%">[#DESCRIPTION#]&nbsp;</td>
+ <td width="200" nowrap>
+  [#if "<#ACTION#>"=="admin"#]
+    <a href="?view_mode=edit_scripts&id=[#ID#]" class="btn btn-default btn-sm" title="<#LANG_EDIT#>"><i class="glyphicon glyphicon-pencil"></i></a>
+    <a href="?view_mode=run_script&id=[#ID#]" target="_blank" onClick="return confirm('<#LANG_ARE_YOU_SURE#>')" class="btn btn-default btn-sm" title="<#LANG_EXECUTE#>"><i class="glyphicon glyphicon-flash"></i></a>
+    <a href="?view_mode=delete_scripts&id=[#ID#]" onClick="return confirm('<#LANG_ARE_YOU_SURE#>')" class="btn btn-default btn-sm" title="<#LANG_DELETE#>"><i class="glyphicon glyphicon-remove"></i></a>
+  [#endif ACTION#]
+ </td>
+</tr>
+[#if LAST#]
+</table>
+</div>
+[#endif#]
+[#end RESULT#]
+<!-- / search results (list) -->
+[#else RESULT#]
+<p align=center>
+<font color="red"><#LANG_NO_RECORDS_FOUND#></font>
+</p>
+[#endif RESULT#]
+
+<script language="javascript">
+[#begin RESULT#]
+ if ($.cookie("script_categories_item[#CATEGORY_ID#]") || (<#TOTAL_CATEGORIES#>==1)) {
+  $('#sub[#CATEGORY_ID#]').show();
+  $('#link[#CATEGORY_ID#]').html('[ - ]');
+ }
+[#end RESULT#]
+</script>

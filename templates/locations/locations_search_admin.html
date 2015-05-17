@@ -1,0 +1,54 @@
+<!--#
+ @version 0.3 (auto-set)
+#-->
+﻿<!-- table locations search -->
+
+<p>
+
+<a href="?view_mode=edit_locations" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i> <#LANG_ADD_NEW_LOCATION#></a>
+
+</p>
+
+<!-- results -->
+[#if RESULT#]
+<!-- search results (list) -->
+<form action="?" method="post" name="frmList_locations" style="padding:0px">
+<table class="table table-striped">
+<tr>
+<th colspan="2">
+<#LANG_TITLE#>
+ </th>
+ </tr>
+[#begin RESULT#]
+<tr >
+ <td
+   >
+  <b>
+   [#TITLE#]
+  </a></b>
+ </td>
+ <td width="100">
+  
+  [#if "<#ACTION#>"=="admin"#]
+  
+    <b><a class="btn btn-default btn-sm" href="?view_mode=edit_locations&id=[#ID#]"><i class="glyphicon glyphicon-pencil"></i></a></b>
+   
+    <a class="btn btn-default btn-sm" href="?view_mode=delete_locations&id=[#ID#]" onClick="return confirm('Delete record?')"><i class="glyphicon glyphicon-remove"></i></a>
+  
+  [#endif ACTION#]
+
+ </td>
+</tr>
+[#end RESULT#]
+</table>
+<input type="hidden" name="data_source" value="<#DATA_SOURCE#>">
+<input type="hidden" name="view_mode" value="multiple_locations">
+</form>
+<!-- / search results (list) -->
+[#else RESULT#]
+<p align=center>
+<div class="alert alert-danger"><#LANG_NO_RECORDS_FOUND#></div>
+</p>
+[#endif RESULT#]
+<!-- / results -->
+

@@ -1,0 +1,48 @@
+<!--#
+ @version 0.3 (auto-set)
+#-->
+ <!-- table classes search -->
+ [#if VIEW_MODE="search_classes" || VIEW_MODE=""#]
+  [#inc classes_search_admin.html#]
+ [#endif VIEW_MODE#]
+ <!-- / table classes search -->
+ <!-- table classes edit -->
+ [#if VIEW_MODE="edit_classes"#]
+   [#if ID!=""#]
+
+<ol class="breadcrumb">
+  <li><a href="?"><#LANG_HOME#></a></li>
+  <li class="active">Class: [#TITLE#]</li>
+</ol>
+
+<ul class="nav nav-tabs">
+ <li [#if TAB=""#]class="active"[#endif#]><a href="?data_source=<#DATA_SOURCE#>&view_mode=<#VIEW_MODE#>&id=<#ID#>&tab="><#LANG_MAIN#></a></li>
+ <li [#if TAB="properties"#]class="active"[#endif#]><a href="?data_source=<#DATA_SOURCE#>&view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=properties"><#LANG_PROPERTIES#></a></li>
+ <li [#if TAB="methods"#]class="active"[#endif#]><a href="?data_source=<#DATA_SOURCE#>&view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=methods"><#LANG_METHODS#></a></li>
+ <li [#if TAB="objects"#]class="active"[#endif#]><a href="?data_source=<#DATA_SOURCE#>&view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=objects"><#LANG_OBJECTS#></a></li>
+</ul>
+
+[#endif ID#]
+
+   [#if TAB=""#]
+    [#inc classes_edit_default.html#]
+   [#endif TAB#]
+   [#if TAB="properties"#]
+    [#inc classes_edit_properties.html#]
+   [#endif TAB#]
+   [#if TAB="methods"#]
+    [#inc classes_edit_methods.html#]
+   [#endif TAB#]
+   [#if TAB="objects"#]
+    [#module name="objects" action="admin" class_id="<#ID#>"#]
+   [#endif TAB#]
+
+ [#endif VIEW_MODE#]
+ <!-- / table classes edit -->
+ <!-- table classes view --> 
+ [#if VIEW_MODE="view_classes"#]
+   [#if TAB=""#]
+    [#inc classes_view_default.html#]
+   [#endif TAB#]
+ [#endif VIEW_MODE#]
+ <!-- / table classes view -->
