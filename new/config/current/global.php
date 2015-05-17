@@ -9,15 +9,6 @@ return array(
 	  'Datasource' => array
 	  (
 
-        'doctrineDatasourceSmsDb' => array(
-            'driver' => 'pdo_pgsql',
-	    	'user' => 'inform',
-	    	'password'=>'l!j@cneg',
-	    	'host'=>'donar.immo',
-	    	'port'=> 5432,
-		   	'dbname'=>'pbr-serv-sms',
-        ),  
-
        
         'DoctrineDatasourceDb' => array(
             'driver'   => 'pdo_mysql',
