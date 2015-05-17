@@ -1,8 +1,8 @@
 <?php
 
-require_once 'libraries/common/Logger/interface.Loggable.php';
-require_once 'libraries/common/Logger/Graylog/GELFMessage.php';
-require_once 'libraries/common/Logger/Graylog/GELFMessagePublisher.php';
+require_once 'pbr-lib-common/src/Logger/interface.Loggable.php';
+require_once 'pbr-lib-common/src/Logger/Graylog/GELFMessage.php';
+require_once 'pbr-lib-common/src/Logger/Graylog/GELFMessagePublisher.php';
 
 /**
  * Имплементация механизма логирования
@@ -71,8 +71,8 @@ class Immo_MobileCommerce_Logger implements Immo_MobileCommerce_Loggable
         if ($tracedepth) $this->setTraceDepth($tracedepth);
         $this->hostName = trim(`hostname`);
         $this->hostNameForGraylog = str_replace(".", "_", $this->hostName);
-        //if (!is_null($graylogHost)) $this->graylogHost = $graylogHost;
-        //$this->graylogPublisher = new GELFMessagePublisher($this->graylogHost);
+        if (!is_null($graylogHost)) $this->graylogHost = $graylogHost;
+        $this->graylogPublisher = new GELFMessagePublisher($this->graylogHost);
     }
 
 
@@ -330,7 +330,7 @@ class Immo_MobileCommerce_Logger implements Immo_MobileCommerce_Loggable
                 @fwrite( $fp, $text."\n" );
                 @fclose( $fp );
             } else {
-                //mail('asmirnov@immo.ru', 'mobile-commerce: class.Logger.php', 'Failed to open log: '.$this->Filename);
+                mail('pbrdevel@immo.ru', 'mobile-commerce: class.Logger.php', 'Failed to open log: '.$this->Filename);
             }
         }
     }
