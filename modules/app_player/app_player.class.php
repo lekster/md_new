@@ -9,6 +9,12 @@
 //
 //
 class app_player extends module {
+
+protected $play;
+protected $terminal_id;
+
+
+
 /**
 * player
 *
@@ -159,7 +165,7 @@ function usual(&$out) {
 
 
 
- if ($session->data['PLAY_TERMINAL']=='') {
+ if (@$session->data['PLAY_TERMINAL']=='') {
   $session->data['PLAY_TERMINAL']=$session->data['TERMINAL'];
  }
 
@@ -167,7 +173,7 @@ function usual(&$out) {
   $session->data['PLAY_TERMINAL']=$play_terminal;
  }
 
- if ($session->data['PLAY_TERMINAL']!='') {
+ if (@$session->data['PLAY_TERMINAL']!='') {
   $terminal=SQLSelectOne("SELECT * FROM terminals WHERE NAME='".DBSafe($session->data['PLAY_TERMINAL'])."'");
  }
 
@@ -175,7 +181,7 @@ function usual(&$out) {
   $terminal['HOST']='localhost';
  }
 
- if (!$play && $session->data['LAST_PLAY']) {
+ if (!$play && @$session->data['LAST_PLAY']) {
   $play=$session->data['LAST_PLAY'];
  } elseif ($play) {
   $session->data['LAST_PLAY']=$play;

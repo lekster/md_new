@@ -141,12 +141,6 @@ class Majordomo_Facade
    //get from config.php
    protected function configurate()
    {
-      /*
-       Define('DB_HOST', 'localhost');
-       Define('DB_NAME', 'majordomo1');
-       Define('DB_USER', 'root');
-       Define('DB_PASSWORD', 'root');
-      */
        $conn = $this->config->get('DoctrineDatasourceDb', 'Datasource');
 
        Define('DB_HOST', $conn['host']);
@@ -171,7 +165,7 @@ class Majordomo_Facade
 
        Define('DOC_ROOT', dirname(__FILE__));              // Your htdocs location (should be detected automatically)
 
-       Define('SERVER_ROOT', 'c:/_majordomo');
+       Define('SERVER_ROOT', '/home/asmirnov/workspace/pbr-wserv-sms-rpc/htdocs/md_new');
        
 
        if (@$_ENV["S2G_BASE_URL"]) {
@@ -180,12 +174,17 @@ class Majordomo_Facade
         Define('BASE_URL', 'http://127.0.0.1:80');              // Your base URL:port (!!!)
        }
 
+        Define('PATH_TO_PHP', 'php');
+       Define('PATH_TO_MYSQLDUMP', "mysqldump");
+
 
        Define('ROOT', DOC_ROOT."/");
        Define('ROOTHTML', "/");
        Define('PROJECT_DOMAIN', @$_SERVER['SERVER_NAME']);
 
        Define('ONEWIRE_SERVER', 'tcp://192.168.1.120:1234');    // 1-wire OWFS server
+        Define('KEEP_HISTORY_DUPLICATES', 1);
+
 
        /*
        Define('HOME_NETWORK', '192.168.0.*');                  // home network (optional)
@@ -197,8 +196,8 @@ class Majordomo_Facade
 
 
        /**********************/
-       //Define('CMS_DESCRIPTION', "1");
-       //Define('CMS_KEYWORDS', "1");
+       Define('CMS_DESCRIPTION', "1");
+       Define('CMS_KEYWORDS', "1");
  
    }
 
@@ -236,11 +235,20 @@ class Majordomo_Facade
          //var_dump('SETTINGS_' . $setting->NAME . "|" . $setting->VALUE);
       }
 
-      if (defined('SETTINGS_SITE_TIMEZONE')) 
-      {
-         ini_set('date.timezone', SETTINGS_SITE_TIMEZONE);
-         date_default_timezone_set(SETTINGS_SITE_TIMEZONE);
-      }
+
+      // language selection by settings
+    if (SETTINGS_SITE_LANGUAGE && file_exists(ROOT . 'languages/' . SETTINGS_SITE_LANGUAGE . '.php')) 
+       include_once (ROOT . 'languages/' . SETTINGS_SITE_LANGUAGE . '.php');
+
+    include_once (ROOT . 'languages/default.php');
+
+    if (defined('SETTINGS_SITE_TIMEZONE')) 
+    {
+       ini_set('date.timezone', SETTINGS_SITE_TIMEZONE);
+       date_default_timezone_set(SETTINGS_SITE_TIMEZONE);
+    }
+
+    Define('SERVER_URL', 'http://'.$_SERVER['SERVER_ADDR'].':'.$_SERVER['SERVER_PORT']);
 
          
    }

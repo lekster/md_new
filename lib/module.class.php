@@ -39,31 +39,40 @@ Define("EQ_DELIMITER", "qz_");
 /**
 * @var string module name
 */
-  var $name;
+  public $name;
 /**
 * @var array module output data
 */
-  var $data;
+  public $data;
 /**
 * @var string module instance name (optional)
 */
-  var $instance;
+  protected $instance;
 /**
 * @var string module teplate file (optional)
 */
-  var $template;
+  protected $template;
 /**
 * @var string module execution result
 */
-  var $result;
+  public $result;
 /**
 * @var object module owner (parent module)
 */
-  var $owner;
+  public $owner;
 /**
 * @var array module configuration
 */
-  var $config;
+  protected $config;
+
+  public $action;
+  protected $mode; 
+  protected $single_rec;
+  protected $view_mode;
+  protected $edit_mode;
+  public $ajax;
+  protected $data_source;
+  protected $parent_item;
 
 // --------------------------------------------------------------------
 /**
@@ -127,6 +136,7 @@ Define("EQ_DELIMITER", "qz_");
 * @return string current module params query string
 */
   function createParamsString($data, $name) {
+   $params1 = array();
    $params="";
    foreach($data as $k=>$v) {
     if ($v=="") {
@@ -178,7 +188,7 @@ Define("EQ_DELIMITER", "qz_");
     return;
    }
 
-
+$global_params = array();
 
   // getting params of all modules
    $modules=explode(PARAMS_DELIMITER, $pd);
@@ -645,6 +655,9 @@ Define("EQ_DELIMITER", "qz_");
     $param_str=$this->saveParams();
    } elseif (IsSet($this->owner)) {
     $param_str=$this->owner->saveParams();
+   } else
+   {
+     $param_str = "";
    }
 
    // a href links like <a href="?param=value">
@@ -705,7 +718,8 @@ Define("EQ_DELIMITER", "qz_");
 
 
    // form hidden variables (exclude </form><!-- modified -->)
-   $result=preg_replace("/<\/form>(?!<!-- modified -->)/is", "<input type=\"hidden\" name=\"pd\" value=\"$param_str\">\n<input type=\"hidden\" name=\"md\" value=\"".$this->name."\">\n<input type=\"hidden\" name=\"inst\" value=\"".$this->instance."\">\n</FORM><!-- modified -->", $result); // forms
+   $result=preg_replace("/<\/form>(?!<!-- modified -->)/is", "<input type=\"hidden\" name=\"pd\" value=\"$param_str\">\n<input type=\"hidden\" name=\"md\" value=\"".
+      $this->name."\">\n<input type=\"hidden\" name=\"inst\" value=\"".$this->instance."\">\n</FORM><!-- modified -->", $result); // forms
    return $result;
 
  }
@@ -720,15 +734,22 @@ Define("EQ_DELIMITER", "qz_");
 * @access private
 */
  function codeParams($in) {
-
-      if (preg_match_all('/(.+?):{(.+?)}/', $in, $matches2, PREG_PATTERN_ORDER)) {
-       for($k=0;$k<count($matches2);$k++) {
+  $res_str = "";
+      if (preg_match_all('/(.+?):{(.+?)}/', $in, $matches2, PREG_PATTERN_ORDER))
+      {
+       //TODO debug
+       //echo "<br>" . var_export($in, true) .  "<br>" ."<br>";
+       //echo "<br>" . var_export($matches2, true) .  "<br>" ."<br>";
+       //for($k = 0; $k < count($matches2); $k++) {
+       for($k = 0; $k < 2; $k++) {
         $data=array();
-        $module_name=$matches2[1][$k];
-        $module_params=explode(',',$matches2[2][$k]);
-        for($m=0;$m<count($module_params);$m++) {
-         $ar=explode("=", trim($module_params[$m]));
-         $data[trim($ar[0])]=trim($ar[1]);
+        $module_name= isset($matches2[1][$k]) ? $matches2[1][$k] : null;
+        
+        $module_params = isset($matches2[2][$k]) ? explode(',',$matches2[2][$k]) : array();
+        for ($m = 0; $m < count($module_params); $m++)
+        {
+          $ar=explode("=", trim($module_params[$m]));
+          $data[trim($ar[0])]=trim($ar[1]);
         }
         $res_str.=$this->createParamsString($data, $module_name).PARAMS_DELIMITER;
        }

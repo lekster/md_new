@@ -10,8 +10,14 @@
 
  class application extends module {
 
-  var $action;
-  var $member_id;
+  public $action;
+  protected $member_id;
+  protected $doc_id;
+  protected $doc;
+  protected $app_action;
+  protected $doc_name;
+  public $ajax;
+  protected $popup;
 
 // --------------------------------------------------------------------
   function application() {
@@ -201,11 +207,11 @@ function getParams() {
    $users=SQLSelect("SELECT * FROM users ORDER BY NAME");
    $total=count($users);
    for($i=0;$i<$total;$i++) {
-    if ($users[$i]['USERNAME']==$session->data['SITE_USERNAME']) {
+    if (isset($session->data['SITE_USERNAME']) && $users[$i]['USERNAME'] == $session->data['SITE_USERNAME']) {
      $users[$i]['SELECTED']=1;
      $out['USER_TITLE']=$users[$i]['NAME'];
      $out['USER_AVATAR']=$users[$i]['AVATAR'];
-    } elseif (!$session->data['SITE_USERNAME'] && $users[$i]['HOST'] && $users[$i]['HOST']==$_SERVER['REMOTE_ADDR']) {
+    } elseif (!@$session->data['SITE_USERNAME'] && $users[$i]['HOST'] && $users[$i]['HOST']==$_SERVER['REMOTE_ADDR']) {
      $session->data['SITE_USERNAME']=$users[$i]['USERNAME'];
      $session->data['SITE_USER_ID']=$users[$i]['ID'];     
      $out['USER_TITLE']=$users[$i]['NAME'];
@@ -234,7 +240,7 @@ function getParams() {
     }
    }
 
-   if ($out['USER_TITLE']) {
+   if (@$out['USER_TITLE']) {
     Define('USER_TITLE', $out['USER_TITLE']);
     Define('USER_AVATAR', $out['USER_AVATAR']);
    } else {
@@ -250,7 +256,7 @@ function getParams() {
     }
    }
 
-   if ($session->data["AUTHORIZED"]) {
+   if (@$session->data["AUTHORIZED"]) {
     $out['AUTHORIZED_ADMIN']=1;
    }
 
@@ -279,7 +285,7 @@ function getParams() {
    if ($this->doc) $this->doc_id=$this->doc;
    $out["DOC_ID"]=$this->doc_id;
 
-   if ($session->data['MY_MEMBER']) {
+   if (@$session->data['MY_MEMBER']) {
     $out['MY_MEMBER']=$session->data['MY_MEMBER'];
     $tmp=SQLSelectOne("SELECT ID FROM users WHERE ID='".(int)$out['MY_MEMBER']."' AND ACTIVE_CONTEXT_ID!=0 AND TIMESTAMPDIFF(SECOND, ACTIVE_CONTEXT_UPDATED, NOW())>600");
     if ($tmp['ID']) {
@@ -293,8 +299,9 @@ function getParams() {
    $days=array('Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота');
    
    $out['TODAY']=$days[date('w')].', '.date('d.m.Y');
-   Define(TODAY, $out['TODAY']);
+   Define('TODAY', $out['TODAY']);
 
+   //TODO убрать
    global $ajt;
    if ($ajt=='') {
     $template_file=DIR_TEMPLATES.$this->name.".html";

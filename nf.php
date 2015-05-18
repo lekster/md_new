@@ -10,6 +10,8 @@
 * @author Serge Dzheigalo <jey@tut.by> http://smartliving.ru/
 */
 
+$found = 0;
+
 if (!preg_match('/\/$/', $_SERVER["REQUEST_URI"])) 
    $file = basename($_SERVER["REQUEST_URI"]);
 
@@ -64,6 +66,7 @@ $requests = array(
    "/^\/([\w-]+)\.html/is"            => '?(application:{action=docs, doc_name=\1})'
 );
 
+
 foreach($requests as $key=>$value) 
 {
    if (!$found && preg_match($key, $_SERVER["REQUEST_URI"], $matches)) 
@@ -79,7 +82,7 @@ foreach($requests as $key=>$value)
    }
 }
 
-if (preg_match('/^moved:(.+)/is', $link, $matches)) 
+if (isset($link) && preg_match('/^moved:(.+)/is', $link, $matches)) 
 {
    Header("HTTP/1.1 301 Moved Permanently"); 
    header("Location:" . $matches[1]);
@@ -89,7 +92,7 @@ if (preg_match('/^moved:(.+)/is', $link, $matches))
 include_once("./config.php");
 include_once("./lib/loader.php");
 
-if ($link!='') 
+if (isset($link) && $link!='') 
 {
    $mdl       = new module();
    $param_str = $mdl->parseLinks("<a href=\"$link\">");

@@ -126,7 +126,7 @@ jQuery.fn.center = function () {
   clearTimeout(eventTimer);
   eventTimer=window.setTimeout ('getNextEvent();', 5000);
   eventState='requesting';
-  AJAXRequest('/getnextevent.html', 'getNextEventReceived', '');
+  AJAXRequest( '/getnextevent.html', 'getNextEventReceived', '');
   return false;
  }
 

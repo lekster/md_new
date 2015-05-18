@@ -12,6 +12,12 @@ Define('DEF_TYPE_OPTIONS', 'html=HTML Code|app=Application|url=URL'); // options
 //
 //
 class layouts extends module {
+
+
+  protected $data_source;
+  protected $tab;
+  protected $mobile;
+
 /**
 * layouts
 *

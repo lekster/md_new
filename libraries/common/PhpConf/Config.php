@@ -85,7 +85,7 @@ abstract class PhpConf_Config
      */
     protected function parse($filename, $is_extending)
     {
-        $realPath = realpath(GIRAR_BASE_DIR . "/" . $filename);
+        $realPath = realpath("/" . $filename);
     	//var_dump($filename);
         //var_dump($realPath);
         //var_dump(realpath($filename));

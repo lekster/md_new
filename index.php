@@ -7,11 +7,15 @@
 * @version 1.2
 */
 
+@error_reporting(E_ALL & ~(E_STRICT|E_NOTICE));
+
 include_once("./config.php");
 include_once("./lib/loader.php");
 require_once ("class.Facade.php");
 
 $facade = Majordomo_Facade::getInstance('config/current/global.php');
+$cache_filename = '';
+
 
 // start calculation of execution time
 startMeasure('TOTAL'); 
@@ -25,15 +29,7 @@ $db = new mysql(DB_HOST, '', DB_USER, DB_PASSWORD, DB_NAME);
 
 include_once("./load_settings.php");
 
-if (!$_GET['nocache']) 
-{
-   // use cache?
-   $use_caching = 0; 
-} 
-else 
-{
-   $use_caching = 0;
-}
+$use_caching = (!@$_GET['nocache']) ? 0 : 0;
 
 // 60 minutes cache expiration time
 $cache_expire  = 60*60; 
@@ -72,6 +68,7 @@ if ($cached_result=='')
    }
 
    $app=new application();
+   $md = null;
 
    if ($md!=$app->name) 
    {
@@ -85,6 +82,10 @@ if ($cached_result=='')
    if ($app->action!='' && $app->action!='docs') 
    {
       $fake_doc='';
+   }
+   else
+   {
+      $fake_doc = null;
    }
 
    if ($app->action == '' && $fake_doc != "" && file_exists(DIR_MODULES.'cms_docs/cms_docs.class.php')) 

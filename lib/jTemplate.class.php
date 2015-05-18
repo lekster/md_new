@@ -30,6 +30,8 @@ class jTemplate {
 */
  var $owner;
 
+protected $ajax;
+
 /**
 * Object constructor
 *
