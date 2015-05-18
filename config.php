@@ -8,10 +8,10 @@
 */
 
 
- Define('DB_HOST', '192.168.1.120');
+ Define('DB_HOST', '10.192.163.44');
  Define('DB_NAME', 'md_0_9_0b');
- Define('DB_USER', 'root');
- Define('DB_PASSWORD', 'root');
+ Define('DB_USER', 'worker');
+ Define('DB_PASSWORD', 'worker');
 
  Define('DIR_TEMPLATES', "./templates/");
  Define('DIR_MODULES', "./modules/");
