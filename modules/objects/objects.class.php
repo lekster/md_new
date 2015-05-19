@@ -612,7 +612,7 @@ curl_close($ch);
   }
   endMeasure('getProperty ('.$property.')', 1);
   endMeasure('getProperty', 1);
-  return $value['VALUE'];
+  return isset($value['VALUE']) ? $value['VALUE'] : false;
  }
 
 /**

@@ -74,6 +74,13 @@ Define("EQ_DELIMITER", "qz_");
   protected $data_source;
   protected $parent_item;
 
+
+  public $room_id;
+
+
+  //check
+  public $tab;
+
 // --------------------------------------------------------------------
 /**
 * Module constructor
@@ -211,7 +218,7 @@ $global_params = array();
         }
         // setting params for current module
         // module has instance in params
-        if ($cr['instance']!='') {
+        if (@$cr['instance'] != '') {
          $instance_params[$module_name][$cr['instance']]=$cr;
         } else {
        // module has no instance
@@ -230,7 +237,7 @@ $global_params = array();
      }
     } elseif (!IsSet($this->instance)) {
      // module has no instances at all
-     $module_data=$global_params[$this->name];
+     $module_data = $global_params[$this->name];
     }
 
     // setting module data

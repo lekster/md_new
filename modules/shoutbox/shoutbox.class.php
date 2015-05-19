@@ -18,6 +18,9 @@ class shoutbox extends module {
 *
 * @access private
 */
+
+public $mobile;
+
 function shoutbox() {
   $this->name="shoutbox";
   $this->title="<#LANG_MODULE_SHOUTBOX#>";

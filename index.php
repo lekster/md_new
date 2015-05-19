@@ -7,7 +7,7 @@
 * @version 1.2
 */
 
-@error_reporting(E_ALL & ~(E_STRICT|E_NOTICE));
+//@error_reporting(E_ALL & ~(E_STRICT|E_NOTICE));
 
 include_once("./config.php");
 include_once("./lib/loader.php");

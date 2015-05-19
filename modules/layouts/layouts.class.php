@@ -15,7 +15,6 @@ class layouts extends module {
 
 
   protected $data_source;
-  protected $tab;
   protected $mobile;
 
 /**

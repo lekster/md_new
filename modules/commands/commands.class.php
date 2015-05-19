@@ -487,7 +487,8 @@ function usual(&$out) {
    $total=count($res);
    for($i=0;$i<$total;$i++) {
     // some action for every record if required
-   if ($res[$i+1]['INLINE']) {
+   //TODO i + 1 бред
+   if (isset($res[$i + 1]['INLINE'])) {
     $res[$i]['INLINE']=1;
    }
 

@@ -18,6 +18,12 @@
   protected $doc_name;
   public $ajax;
   protected $popup;
+  public $room_id;
+
+
+  //check
+  public $tab;
+
 
 // --------------------------------------------------------------------
   function application() {

@@ -326,7 +326,7 @@ protected $ajax;
  while (preg_match_all('/\[#begin (.*?)#\](.*?)\[#end \1#\]/is', $res, $matches, PREG_PATTERN_ORDER)) {
   $count_matches_0=count($matches[0]);
   for($i=0;$i<$count_matches_0;$i++) {
-   $var=$hash[$matches[1][$i]];
+   $var=isset($hash[$matches[1][$i]]) ? $hash[$matches[1][$i]] : null;
    $line1=$matches[2][$i];
    $res1="";
 
@@ -458,11 +458,15 @@ protected $ajax;
       $false_part= isset($temp[1]) ? $temp[1] : "";
       $condition=preg_replace('/^!(\w+)$/', '!IsSet($hash[\'\\1\'])', $condition);
       $condition=preg_replace('/^(\w+)$/', 'IsSet($hash[\'\\1\'])', $condition);
-      $condition=preg_replace('/(\w+)(?=[=!<>])/', '$hash[\'\\1\']', $condition);
-      $condition=preg_replace('/\((\w+)\)/', '($hash[\'\\1\'])', $condition);
+      $condition=preg_replace('/(\w+)(?=[=!<>])/', '@$hash[\'\\1\']', $condition);
+      $condition=preg_replace('/\((\w+)\)/', '(@$hash[\'\\1\'])', $condition);
       $condition=preg_replace('/\]=(?=[^\w=])/', ']==', $condition);
       $str="if ($condition) {\$res1=\$true_part;} else {\$res1=\$false_part;}";     
-      eval($str);
+      $ret = eval($str);
+      if ($ret === false)
+      {
+        ///var_dump($str);
+      }
       $bdy=$res1;
 
 
